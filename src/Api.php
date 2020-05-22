@@ -48,6 +48,30 @@ class Api
         return null;
     }
 
+    public function wechatAppPayment($order_id, $amount, $currency, $description, $notify_url, $sub_app_id, $timeout = 0)
+    {
+        $payinfo = $this->request->post(self::paymentsUrl(), array(
+            'user' => $this->account->getUser(),
+            'time' => time(),
+            'method' => 'v3.CreatePaymentsWechatAPPPay',
+            'data' => array(
+                'pay_method' => 'online',
+                'sub_pay_method' => "WeChat Pay",
+                'order_id' => $order_id,
+                'amount' => $amount,
+                'currency' => $currency,
+                'description' => $description,
+                'timeout' => $timeout,
+                'notify_url' => $notify_url,
+                "sub_app_id" => $sub_app_id,
+            )
+        ));
+        if(isset($payinfo['parameters']) && !empty($payinfo['parameters'])){
+            return $payinfo['parameters'];
+        }
+        return null;
+    }
+
     public function cancel($trade_id)
     {
         return $this->request->post(self::cancelUrl(), array(
