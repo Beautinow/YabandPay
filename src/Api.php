@@ -72,6 +72,21 @@ class Api
         return null;
     }
 
+    public function queryOrder($trade_id) {
+        $orderInfo = $this->request->post(self::paymentsUrl(), array(
+            'user' => $this->account->getUser(),
+            'time' => time(),
+            'method' => 'v3.QueryOrder',
+            'data' => array(
+                'trade_id' => $trade_id
+            )
+        ));
+        if(isset($orderInfo['transaction_info']) && !empty($orderInfo['transaction_info'])){
+            return $orderInfo['transaction_info'];
+        }
+        return null;
+    }
+
     public function cancel($trade_id)
     {
         return $this->request->post(self::cancelUrl(), array(
